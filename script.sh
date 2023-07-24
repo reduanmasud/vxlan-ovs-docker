@@ -70,7 +70,7 @@ sudo ovs-vsctl add-br $br2_name
 echo -e "${green}Setting up Brideg... ${clear}"
 sudo ovs-vsctl add-port $br2_name veth1 -- set interface veth1 type=internal
 
-show ovs-vsctl show
+sudo ovs-vsctl show
 
 # ========== [Enter] Continue ========== #
 echo -e -n "Press ${yellow}Enter${clear} to continue ..."
