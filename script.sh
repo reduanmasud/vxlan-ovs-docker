@@ -60,14 +60,15 @@ read -r br1_name
 echo -e "${green}Creaing Bridge... ${clear}"
 sudo ovs-vsctl add-br $br1_name
 echo -e "${green}Setting up Brideg... ${clear}"
-sudo ovs-vsctl add-port $br1_name veth0 --set interface veth0 type=internal
+sudo ovs-vsctl add-port $br1_name veth0 -- set interface veth0 type=internal
+
 
 echo -e -n "${green}Enter Second bridge name (Ex. ovs-br1): ${clear}"
 read -r br2_name
 echo -e "${green}Creaing Bridge... ${clear}"
 sudo ovs-vsctl add-br $br2_name
 echo -e "${green}Setting up Brideg... ${clear}"
-sudo ovs-vsctl add-port $br2_name veth1 --set interface veth1 type=internal
+sudo ovs-vsctl add-port $br2_name veth1 -- set interface veth1 type=internal
 
 show ovs-vsctl show
 
