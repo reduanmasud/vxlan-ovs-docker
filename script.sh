@@ -93,7 +93,7 @@ read -r veth1_ip
 ip a | grep DOWN
 
 echo -e "${green}Setting ip...${clear}"
-sudo ip addr add $veth1_ip dev veth0
+sudo ip addr add $veth1_ip dev veth1
 echo -e "${green}Make interface UP ...${clear}"
 sudo ip link set dev veth1 up mtu 1500
 
