@@ -145,9 +145,9 @@ read -r garrbage
 
 echo -e "${yellow}Now we will assign static ip address to containers ${clear}"
 
-echo -e -n "${green}Enter IP address for First container(ex. 192.168.1.11/24): ${clear}"
+echo -e -n "${green}Enter IP address for ${yellow} $docker1_name ${green} container(ex. 192.168.1.11/24): ${clear}"
 read -r docker1_ip
-echo -e -n "${green}Enter Gateway address for First container (ex. 192.168.1.1): ${clear}"
+echo -e -n "${green}Enter Gateway address for ${yellow} $docker1_name ${green} container (ex. 192.168.1.1): ${clear}"
 read -r docker1_gateway
 
 sudo ovs-docker add-port $br1_name eth0 $docker1_name --ipaddress=$docker1_ip --gateway=$docker1_gateway
@@ -158,9 +158,9 @@ echo -e -n "Press ${yellow}Enter${clear} to continue ..."
 read -r garrbage
 # ========== [Enter] Continue ========== #
 
-echo -e -n "${green}Enter IP address for Second container(ex. 192.168.2.11/24): ${clear}"
+echo -e -n "${green}Enter IP address for ${yellow} $docker2_name ${green} container(ex. 192.168.2.11/24): ${clear}"
 read -r docker2_ip
-echo -e -n "${green}Enter Gateway address for Second container (ex. 192.168.2.1): ${clear}"
+echo -e -n "${green}Enter Gateway address for ${yellow} $docker2_name ${green} container (ex. 192.168.2.1): ${clear}"
 read -r docker2_gateway
 
 sudo ovs-docker add-port $br2_name eth0 $docker2_name --ipaddress=$docker2_ip --gateway=$docker2_gateway
@@ -201,7 +201,7 @@ echo -e "${green} => For $br1_name ${clear}"
 echo -e -n "${green}Enter other VM IP:${clear}"
 read -r other_vm_ip
 
-echo -e -n "${green}ENTER VNI Key:${clear}"
+echo -e -n "${green}ENTER VNI Key for ${yellow} $br1_name ${green} :${clear}"
 read -r vni_key
 
 sudo ovs-vsctl add-port $br1_name vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=$other_vm_ip options:key=$vni_key
@@ -210,7 +210,7 @@ echo -e "${green} => For $br2_name {$clear}"
 echo -e -n "${green}Enter other VM IP:${clear}"
 read -r other_vm_ip
 
-echo -e -n "${green}ENTER VNI Key:${clear}"
+echo -e -n "${green}ENTER VNI Key ${yellow} $br2_name ${green}:${clear}"
 read -r vni_key
 
 sudo ovs-vsctl add-port $br2_name vxlan1 -- set interface vxlan1 type=vxlan options:remote_ip=$other_vm_ip options:key=$vni_key
