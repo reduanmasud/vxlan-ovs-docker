@@ -197,7 +197,7 @@ netstat -ntulp
 # make sure remote IP and key options; they are important
 echo -e "${yellow}Create the vxlan tunnel using ovs vxlan feature for both bridges to another hosts bridges${clear}"
 
-echo -e "${green} => For $br1_name {$clear}"
+echo -e "${green} => For $br1_name ${clear}"
 echo -e -n "${green}Enter other VM IP:${clear}"
 read -r other_vm_ip
 
