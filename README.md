@@ -262,7 +262,42 @@ sudo docker exec docker2 ping 192.168.1.11
 sudo docker exec docker2 ping 192.168.1.12
 
 ```
-`successful pings are expected when communicating within the same subnet, and ping failures are expected when trying to communicate across different subnets, as there is no routing or connectivity established between the subnets`
+```successful pings are expected when communicating within the same subnet, and ping failures are expected when trying to communicate across different subnets, as there is no routing or connectivity established between the subnets```
+**That means we can reach other hosts docker with same VNI. So what can we do to reach other dockers?**
+
+**To do that we need to apply NAT each host to send the packet outer world**
+
+## Let's try to establish connection between two subnets
 
 
+```bash
+# ping the outer world, should not reach the internet
+ping 1.1.1.1 -c 2
 
+# fist lets check what is my VM's ip forward status
+# if status is 0 we need to set it as 1
+sudo cat /proc/sys/net/ipv4/ip_forward
+
+# enabling ip forwarding by change value 0 to 1
+sudo sysctl -w net.ipv4.ip_forward=1
+# Apply the karnal change
+sudo sysctl -p /etc/sysctl.conf
+
+
+# see the rules
+sudo iptables -t nat -L -n -v
+
+
+sudo iptables --append FORWARD --in-interface veth1 --jump ACCEPT
+sudo iptables --append FORWARD --out-interface veth1 --jump ACCEPT
+sudo iptables --table nat --append POSTROUTING --source 192.168.2.0/24 --jump MASQUERADE
+
+# ping the outer world now, should be working now
+ping 1.1.1.1 -c 2
+```
+
+```
+The provided command, sudo iptables --append FORWARD --in-interface veth1 --jump ACCEPT, adds a rule to the Linux kernel's iptables firewall configuration, allowing forwarding of packets arriving from the network interface veth1 to other interfaces in the system. This facilitates smooth communication between virtual interfaces or containers and the host's network in virtualization or container environments. The rule's action is set to ACCEPT, permitting the allowed packets to pass through the system without being blocked by the firewall. However, it's essential to consider the entire firewall ruleset for comprehensive network security, and saving the rules configuration will ensure the rule persists across system reboots.
+```
+
+## Now we should able to ping all other containers 🎉🎉🎉🎉
