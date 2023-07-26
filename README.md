@@ -53,6 +53,72 @@ Now you can check agaig using `ip a` is every thing is ok.
 ## Install Necessery tools
 **Both VMs**
 ```sh
-sudo apt update
-sudo apt install -y net-tools docker.io
+sudo apt-get update
+sudo apt-get install -y net-tools docker.io openvswitch-switch
 ```
+
+## Create Two Bride using `ovs-vsctl` utility tools
+
+**VM Host 01**
+```sh
+# Create a bridge named 'ovs-br0'
+sudo ovs-vsctl add-br ovs-br0
+
+# Create a bridge named 'ovs-br1'
+sudo ovs-vsctl add-br ovs-br1
+```
+
+**VM Host 02**
+```sh
+# Create a bridge named 'ovs-br0'
+sudo ovs-vsctl add-br ovs-br0
+
+# Create a bridge named 'ovs-br1'
+sudo ovs-vsctl add-br ovs-br1
+```
+**NB:** Bridge name should be same in both VMs.
+
+## create the internal port/interfaces to the ovs-bridge:
+
+**Both VMs**
+```sh
+# add port/interfaces to bridges
+sudo ovs-vsctl add-port ovs-br0 veth0 -- set interface veth0 type=internal
+sudo ovs-vsctl add-port ovs-br1 veth1 -- set interface veth1 type=internal
+# ovs-br0 is the bridge name
+# veth0 is the interface/port name where type is 'internal'
+
+# check the status of bridges
+sudo ovs-vsctl show
+
+```
+**Explanation:** `sudo ovs-vsctl add-port ovs-br0 veth0 -- set interface veth0 type=internal`
+
+**ovs-vsctl:** This is the command-line utility for managing Open vSwitch (OVS) configurations.
+
+**add-port ovs-br0 veth0:** This part of the command adds a new port named veth0 to the OVS bridge named ovs-br0. In OVS, bridges are virtual switches that can connect multiple interfaces together, allowing communication between different ports.
+
+**--:** This double dash -- separates the add-port command from the following set command, indicating that the options specified after this point are for the set command, not the add-port command.
+
+**set interface veth0 type=internal:** This sets the newly added port veth0 as an internal interface. An internal interface in OVS is a special type of virtual interface that is used for communication between different ports within the same OVS bridge.
+
+## Set the IP of the bridges and up the inteface:
+
+**Both VMs** `Two VMs bridge should have same IP address as they will work as gateway`
+
+```sh
+# set the ip to the created port/interfaces
+sudo ip address add 192.168.1.1/24 dev veth0 
+sudo ip address add 192.168.2.1/24 dev veth1
+
+# Check the status, link should be down
+ip a
+
+# up the interfaces and check status
+sudo ip link set dev veth0 up mtu 1450
+sudo ip link set dev veth1 up mtu 1450
+
+# Check the status, link should be UP/UNKNOWN 
+ip a
+```
+
